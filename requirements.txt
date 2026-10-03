@@ -1,2 +1,2 @@
-vnstock
+yfinance
 pyyaml
