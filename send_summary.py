@@ -162,12 +162,13 @@ def send_email(html_body):
 
 def get_latest_report() -> Path | None:
     """Tìm report HTML mới nhất trong vòng 3 ngày gần nhất."""
-    reports_dir = Path("data/reports")
-    if not reports_dir.exists():
+    # Chấp nhận cả data/reports (chuẩn) và reports (routine có thể ghi vào đây)
+    report_dirs = [d for d in (Path("data/reports"), Path("reports")) if d.exists()]
+    if not report_dirs:
         return None
     cutoff = date.today() - timedelta(days=3)
     candidates = []
-    for f in reports_dir.glob("*.html"):
+    for f in (f for d in report_dirs for f in d.glob("*.html")):
         # Lấy ngày từ tên file (pattern: *YYYY-MM-DD*.html)
         for part in f.stem.split("_"):
             try:
